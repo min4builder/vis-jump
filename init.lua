@@ -1,3 +1,5 @@
 vis:map(vis.modes.NORMAL, "gx", function(keys)
-    vis:command("!xdg-open https://reddit.com")
+    local handle = io.popen("xdg-open https://reddit.com")
+    local data = handle:read()
+    local success, msg, status = handle:close()
 end, "Jump to URL")
