@@ -1,4 +1,6 @@
-local function get_query()
+local M = {}
+
+M.get_query = function()
     local line = vis.win.selection.line
     local pos = vis.win.selection.col
     local str = vis.win.file.lines[line]
@@ -11,7 +13,7 @@ local function get_query()
     return str:sub(from, to)
 end
 
-local function replace_URLs()
+M.replace_URLs = function()
     local line = vis.win.selection.line
     local str = vis.win.file.lines[line]
 
@@ -40,15 +42,18 @@ local function replace_URLs()
 end
 
 vis:map(vis.modes.NORMAL, "gx", function()
-    local cur_word = get_query()
+    local cur_word = M.get_query()
     -- https://bugzilla.suse.com/show_bug.cgi?id=1130840
     -- https://bugs.freedesktop.org/show_bug.cgi?id=103807  x
     -- https://www.damejidlo.cz/potrefena-husa-vinohrady
     -- gh#python/cpython#7778 or bpo#34032
-    os.execute("osurl '" .. cur_word .. "'")
+    if M.gx_cmd == nil then M.gx_cmd = 'setsid xdg-open' end
+    os.execute(M.gx_cmd .. " '" .. cur_word .. "'")
 end, "Jump to URL")
 
 -- https://en.opensuse.org/openSUSE:Packaging_Patches_guidelines#Current_set_of_abbreviations
 vis:map(vis.modes.NORMAL, "gG", function()
-    replace_URLs()
+    M.replace_URLs()
 end, "Shorten URLs")
+
+return M
