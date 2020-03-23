@@ -54,6 +54,7 @@ end, "Jump to URL")
 -- https://en.opensuse.org/openSUSE:Packaging_Patches_guidelines#Current_set_of_abbreviations
 vis:map(vis.modes.NORMAL, "gG", function()
     M.replace_URLs()
+    vis.win:draw()
 end, "Shorten URLs")
 
 return M
