@@ -6,7 +6,7 @@ M.get_query = function()
     local str = vis.win.file.lines[line]
     local len_str = string.len(str)
 
-    local URLchars = '[^a-zA-Z0-9%?._=+;&/:@#]'
+    local URLchars = '[^a-zA-Z0-9%?._=+;&/:@#-]'
     local to = str:find(URLchars, pos)
     if to == nil then to = len_str else to = to - 1 end
     local from = str:reverse():find(URLchars, len_str - pos + 1)
