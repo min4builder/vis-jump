@@ -6,9 +6,10 @@ M.get_query = function()
     local str = vis.win.file.lines[line]
     local len_str = string.len(str)
 
-    local to = str:find('%s', pos)
+    local URLchars = '[^a-zA-Z0-9%?._=+;&/:@#]'
+    local to = str:find(URLchars, pos)
     if to == nil then to = len_str else to = to - 1 end
-    local from = str:reverse():find('%s', len_str - pos + 1)
+    local from = str:reverse():find(URLchars, len_str - pos + 1)
     if from == nil then from = 1 else from = len_str - from + 2 end
     return str:sub(from, to)
 end
@@ -47,8 +48,11 @@ vis:map(vis.modes.NORMAL, "gx", function()
     -- https://bugs.freedesktop.org/show_bug.cgi?id=103807  x
     -- https://www.damejidlo.cz/potrefena-husa-vinohrady
     -- gh#python/cpython#7778 or bpo#34032
+    -- (https://src.adamsgaard.dk/)
     if M.gx_cmd == nil then M.gx_cmd = 'setsid xdg-open' end
-    os.execute(M.gx_cmd .. " '" .. cur_word .. "'")
+    local command = M.gx_cmd .. " '" .. cur_word .. "'"
+    -- print("command = '" .. command .. "'")
+    os.execute(command)
 end, "Jump to URL")
 
 -- https://en.opensuse.org/openSUSE:Packaging_Patches_guidelines#Current_set_of_abbreviations
