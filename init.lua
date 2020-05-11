@@ -20,6 +20,7 @@ M.replace_URLs = function()
 
     str = str:gsub("https://github.com/(.*)/issues/(%d+)", "gh#%1#%2")
     str = str:gsub("https://github.com/(.*)/pull/(%d+)", "gh#%1#%2")
+    str = str:gsub("https://gitlab.com/(.*)/-/issues/(%d+)", "gl#%1#%2")
     str = str:gsub("https://gitlab.com/(.*)/issues/(%d+)", "gl#%1#%2")
     str = str:gsub("https://gitlab.com/(.*)/pull/(%d+)", "gl#%1#%2")
     str = str:gsub("https://sourceforge.net/support/tracker.php%?aid=(%d+)", "sh#%1")
