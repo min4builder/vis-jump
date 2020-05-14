@@ -36,7 +36,7 @@ M.replace_URLs = function()
     str = str:gsub("https://bugzilla.opensuse.org/(%d+)", "boo#%1")
     str = str:gsub("https://bugzilla.suse.com/show_bug.cgi%?id=(%d+)", "bsc#%1")
     str = str:gsub("https://bugzilla.suse.com/(%d+)", "bsc#%1")
-    str = str:gsub("https://jira.suse.com/browse/(%d+)", "jsc#%1")
+    str = str:gsub("https://jira.suse.com/browse/(%a+)", "jsc#%1")
     str = str:gsub("https://bugs.python.org/issue(%d+)", "bpo#%1")
     str = str:gsub("https://bugs.launchpad.net/[^]+/+bug/(%d+)", "lp#%1")
 
