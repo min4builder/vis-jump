@@ -1,5 +1,11 @@
 local M = {}
 
+local function rtrim(s)
+    local n = #s
+    while n > 0 and s:find("^%s", n) do n = n - 1 end
+    return s:sub(1, n)
+end
+
 M.get_query = function()
     local line = vis.win.selection.line
     local pos = vis.win.selection.col
@@ -17,29 +23,10 @@ end
 M.replace_URLs = function()
     local line = vis.win.selection.line
     local str = vis.win.file.lines[line]
-
-    str = str:gsub("https://github.com/(.*)/issues/(%d+)", "gh#%1#%2")
-    str = str:gsub("https://github.com/(.*)/pull/(%d+)", "gh#%1#%2")
-    str = str:gsub("https://gitlab.com/(.*)/-/issues/(%d+)", "gl#%1#%2")
-    str = str:gsub("https://gitlab.com/(.*)/issues/(%d+)", "gl#%1#%2")
-    str = str:gsub("https://gitlab.com/(.*)/pull/(%d+)", "gl#%1#%2")
-    str = str:gsub("https://sourceforge.net/support/tracker.php%?aid=(%d+)", "sh#%1")
-    str = str:gsub("https://sf.net/support/tracker.php%?aid=(%d+)", "sh#%1")
-    str = str:gsub("https://sourceforge.net/p/(.*)/patches/(%d+)/", "shp#%1#%2")
-    str = str:gsub("https://sourceforge.net/p/(.*)/bugs/(%d+)/", "shb#%1#%2")
-    str = str:gsub("https://sf.net/support/p/(.*)/patches/(%d+)/", "shp#%1#%2")
-    str = str:gsub("https://sf.net/support/p/(.*)/bugs/(%d+)/", "shb#%1#%2")
-    str = str:gsub("https://bitbucket.org/(.*)/issues/(%d+)/", "bt#%1#%2")
-    str = str:gsub("https://build.suse.de/request/show/(%d+)", "ssr#%1")
-    str = str:gsub("https://build.opensuse.org/request/show/(%d+)", "sr#%1")
-    str = str:gsub("https://bugzilla.opensuse.org/show_bug.cgi%?id=(%d+)", "boo#%1")
-    str = str:gsub("https://bugzilla.opensuse.org/(%d+)", "boo#%1")
-    str = str:gsub("https://bugzilla.suse.com/show_bug.cgi%?id=(%d+)", "bsc#%1")
-    str = str:gsub("https://bugzilla.suse.com/(%d+)", "bsc#%1")
-    str = str:gsub("https://jira.suse.com/browse/(%a+)", "jsc#%1")
-    str = str:gsub("https://bugs.python.org/issue(%d+)", "bpo#%1")
-    str = str:gsub("https://bugs.launchpad.net/[^]+/+bug/(%d+)", "lp#%1")
-
+    -- print(debug.getinfo(2,'S').source)
+    local ahandle = io.popen("abbrevURL " .. str)
+    str = rtrim(ahandle:read("*a"))
+    ahandle:close()
     vis.win.file.lines[line] = str
 end
 
