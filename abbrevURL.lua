@@ -1,6 +1,11 @@
 #!/usr/bin/lua
+local str = ''
 
-local str = arg[1]:lower()
+if #arg == 0 then
+str = io.read("*l")
+else
+str = arg[1]:lower()
+end
 
 str = str:gsub("https://github.com/(.*)/issues/(%d+)", "gh#%1#%2")
 str = str:gsub("https://github.com/(.*)/pull/(%d+)", "gh#%1#%2")

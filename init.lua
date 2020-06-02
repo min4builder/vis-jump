@@ -1,7 +1,7 @@
 local M = {}
 
 local function getPath(str, sep)
-    local sep=sep or'/'
+    sep = sep or '/'
     if str:sub(1, 1) == '@' then str = str:sub(2) end
     return str:match("(.*" .. sep .. ")")
 end
@@ -28,8 +28,8 @@ end
 
 M.replace_URLs = function()
     local line = vis.win.selection.line
-    local cmd = getPath(debug.getinfo(2,'S').source) .. "abbrevURL.lua"
-    local ahandle = io.popen(cmd .. " " .. vis.win.file.lines[line])
+    local cmd = getPath(debug.getinfo(2,'S').source) .. "abbrevURL.lua '" .. vis.win.file.lines[line] .. "'"
+    local ahandle = io.popen(cmd)
     local out = rtrim(ahandle:read("*a"))
     ahandle:close()
     -- local status, out, err = vis:pipe(vis.win.file, vis.win.selection.range, cmd)
