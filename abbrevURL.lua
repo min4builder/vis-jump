@@ -29,6 +29,6 @@ str = str:gsub("https?://bugzilla.redhat.com/show_bug.cgi%?id=(%d+)", "rh#%1")
 str = str:gsub("https?://bugzilla.redhat.com/(%d+)", "rh#%1")
 str = str:gsub("https?://jira.suse.com/browse/(%a+)", "jsc#%1")
 str = str:gsub("https?://bugs.python.org/issue(%d+)", "bpo#%1")
-str = str:gsub("https?://bugs.launchpad.net/[^]+/+bug/(%d+)", "lp#%1")
+str = str:gsub("https?://bugs.launchpad.net/.+/%+bug/(%d+)", "lp#%1")
 
 print(str)
