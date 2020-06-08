@@ -60,11 +60,11 @@ vis:map(vis.modes.NORMAL, "gx", function()
 end, "Jump to URL")
 
 -- https://en.opensuse.org/openSUSE:Packaging_Patches_guidelines#Current_set_of_abbreviations
--- vis:map(vis.modes.NORMAL, "gG", function()
---    M.replace_URLs()
---    vis.win:draw()
--- end, "Shorten URLs")
-vis:operator_new("gG", function(file, range, pos)
+vis:map(vis.modes.NORMAL, "gG", function()
+   M.replace_URLs()
+   vis.win:draw()
+end, "Shorten URLs")
+vis:operator_new("gK", function(file, range, pos)
     -- local cmd = getPath(debug.getinfo(2,'S').source) .. "abbrevURL.lua"
     local cmd = "abbrevURL"
     local status, out, err = vis:pipe(file, range, cmd)
@@ -74,6 +74,7 @@ vis:operator_new("gG", function(file, range, pos)
 		file:delete(range)
 		file:insert(range.start, out)
 	end
+ vis.win:draw()
 	return range.start -- new cursor location
 end, "Formatting operator, abbreviate URL")
 
