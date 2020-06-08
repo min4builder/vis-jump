@@ -1,6 +1,7 @@
 local M = {}
 
 local function getPath(str, sep)
+    vis:info('str = ' .. str)
     sep = sep or '/'
     if str:sub(1, 1) == '@' then str = str:sub(2) end
     return str:match("(.*" .. sep .. ")")
@@ -28,11 +29,20 @@ end
 
 M.replace_URLs = function()
     local line = vis.win.selection.line
-    local cmd = getPath(debug.getinfo(2,'S').source) .. "abbrevURL.lua '" .. vis.win.file.lines[line] .. "'"
-    local ahandle = io.popen(cmd)
+    -- read/write pipes in Lua are close to impossible
+    -- http://lua-users.org/lists/lua-l/2007-10/msg00189.html
+    -- perhaps
+    -- local status, out, err = vis:pipe(vis.win.file, vis.win.selection.range, cmd)
+    -- but it doesn't work
+    local tmpfile = os.tmpname()
+    local cmd = getPath(debug.getinfo(2,'S').source) .. "abbrevURL.lua >" .. tmpfile
+    local ahandle = io.popen(cmd, 'w')
+    ahandle:write(vis.win.file.lines[line])
+    ahandle:close()
+    ahandle = io.open(tmpfile)
     local out = rtrim(ahandle:read("*a"))
     ahandle:close()
-    -- local status, out, err = vis:pipe(vis.win.file, vis.win.selection.range, cmd)
+    os.remove(tmpfile)
     vis.win.file.lines[line] = out
 end
 
@@ -50,9 +60,21 @@ vis:map(vis.modes.NORMAL, "gx", function()
 end, "Jump to URL")
 
 -- https://en.opensuse.org/openSUSE:Packaging_Patches_guidelines#Current_set_of_abbreviations
-vis:map(vis.modes.NORMAL, "gG", function()
-    M.replace_URLs()
-    vis.win:draw()
-end, "Shorten URLs")
+-- vis:map(vis.modes.NORMAL, "gG", function()
+--    M.replace_URLs()
+--    vis.win:draw()
+-- end, "Shorten URLs")
+vis:operator_new("gG", function(file, range, pos)
+    -- local cmd = getPath(debug.getinfo(2,'S').source) .. "abbrevURL.lua"
+    local cmd = "abbrevURL"
+    local status, out, err = vis:pipe(file, range, cmd)
+    if not status then
+    	vis:info(err)
+	else
+		file:delete(range)
+		file:insert(range.start, out)
+	end
+	return range.start -- new cursor location
+end, "Formatting operator, abbreviate URL")
 
 return M
