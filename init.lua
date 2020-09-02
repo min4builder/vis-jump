@@ -61,8 +61,11 @@ end, "Jump to URL")
 
 -- https://en.opensuse.org/openSUSE:Packaging_Patches_guidelines#Current_set_of_abbreviations
 vis:map(vis.modes.NORMAL, "gG", function()
+   local my_col = vis.win.selection.col
+   local my_line = vis.win.selection.line
    M.replace_URLs()
    vis.win:draw()
+   vis.win.selection:to(my_line, my_col)
 end, "Shorten URLs")
 vis:operator_new("gK", function(file, range, pos)
     -- local cmd = getPath(debug.getinfo(2,'S').source) .. "abbrevURL.lua"
