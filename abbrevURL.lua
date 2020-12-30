@@ -34,5 +34,6 @@ str = str:gsub("https?://bugs.documentfoundation.org/(%d+)", "tdf#%1")
 str = str:gsub("https?://jira.suse.com/browse/(%a+)", "jsc#%1")
 str = str:gsub("https?://bugs.python.org/issue(%d+)", "bpo#%1")
 str = str:gsub("https?://bugs.launchpad.net/.+/%+bug/(%d+)", "lp#%1")
+str = str:gsub("https?://www.python.org/dev/peps/pep%-(%d+)/?", "pep#%1")
 
 print(str)
