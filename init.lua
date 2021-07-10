@@ -1,7 +1,6 @@
 local M = {}
 
 local function getPath(str, sep)
-    vis:info('str = ' .. str)
     sep = sep or '/'
     if str:sub(1, 1) == '@' then str = str:sub(2) end
     return str:match("(.*" .. sep .. ")")
